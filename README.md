@@ -23,6 +23,17 @@ docker run -p 8080:80 youtube-app
 Check contianer logs:
 `docker logs <CONTAINER ID>`
 
+2. **Health Check Endpoint**
+- The React app’s frontend routes all requests (including `/health` and `/ping`) to the same `index.html`, which is typical for single-page applications (SPAs) where client-side routing handles paths.
+
+- **Problem for ALB Health Checks:**
+    - The ALB *health check expects a lightweight endpoint that returns a 200 OK status* with minimal payload (e.g., plain text or JSON).
+    - The *HTML response is too heavy* and not designed for health checks, potentially slowing down the ALB’s checks and wasting resources.
+
+- **Solution:**    
+    - Since App Is Purely Frontend (e.g., React served by Nginx): Add a lightweight health check endpoint via Nginx configuration.
+    i.e *configure Nginx to serve a /health endpoint*
+
 
 ---
 
